@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebase Auth Test</title>
+</head>
+<body>
+    <h1>Firebase Authentication Test</h1>
+    
+    <div id="status">Loading...</div>
+    
+    <div id="test-form" style="margin: 20px 0;">
+        <h3>Test Login</h3>
+        <input type="email" id="test-email" placeholder="Email" value="harriet@thewizardtearoom.co.uk">
+        <input type="password" id="test-password" placeholder="Password">
+        <button onclick="testLogin()">Test Login</button>
+    </div>
+    
+    <div id="results"></div>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js';
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js';
+
+        let auth;
+        let config;
+
+        async function initFirebase() {
+            const statusDiv = document.getElementById('status');
+            const resultsDiv = document.getElementById('results');
+            
+            try {
+                // Load config
+                const response = await fetch('./config/dev-config.json');
+                if (!response.ok) {
+                    throw new Error(`Config load failed: ${response.status}`);
+                }
+                config = await response.json();
+                
+                resultsDiv.innerHTML += `<p>✅ Config loaded</p>`;
+                resultsDiv.innerHTML += `<p>Project: ${config.firebase.projectId}</p>`;
+                
+                // Initialize Firebase
+                const app = initializeApp(config.firebase);
+                auth = getAuth(app);
+                
+                resultsDiv.innerHTML += `<p>✅ Firebase initialized</p>`;
+                statusDiv.innerHTML = '✅ Ready for testing';
+                
+            } catch (error) {
+                statusDiv.innerHTML = '❌ Initialization failed';
+                resultsDiv.innerHTML += `<p style="color: red;">Error: ${error.message}</p>`;
+                console.error('Init error:', error);
+            }
+        }
+
+        window.testLogin = async function() {
+            const email = document.getElementById('test-email').value;
+            const password = document.getElementById('test-password').value;
+            const resultsDiv = document.getElementById('results');
+            
+            if (!email || !password) {
+                resultsDiv.innerHTML += `<p style="color: red;">Please fill in both fields</p>`;
+                return;
+            }
+            
+            try {
+                resultsDiv.innerHTML += `<p>🔄 Attempting login for: ${email}</p>`;
+                
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+                
+                resultsDiv.innerHTML += `<p style="color: green;">✅ Login successful!</p>`;
+                resultsDiv.innerHTML += `<p>User: ${user.email}</p>`;
+                resultsDiv.innerHTML += `<p>UID: ${user.uid}</p>`;
+                
+            } catch (error) {
+                resultsDiv.innerHTML += `<p style="color: red;">❌ Login failed</p>`;
+                resultsDiv.innerHTML += `<p style="color: red;">Code: ${error.code}</p>`;
+                resultsDiv.innerHTML += `<p style="color: red;">Message: ${error.message}</p>`;
+                
+                // Specific diagnostic messages
+                if (error.code === 'auth/user-not-found') {
+                    resultsDiv.innerHTML += `<p style="color: orange;">💡 The user account doesn't exist. Create it in Firebase Console > Authentication > Users</p>`;
+                } else if (error.code === 'auth/operation-not-allowed') {
+                    resultsDiv.innerHTML += `<p style="color: orange;">💡 Email/password auth is not enabled. Enable it in Firebase Console > Authentication > Sign-in method</p>`;
+                } else if (error.code === 'auth/invalid-api-key') {
+                    resultsDiv.innerHTML += `<p style="color: orange;">💡 Invalid API key. Check your Firebase configuration</p>`;
+                }
+                
+                console.error('Login error:', error);
+            }
+        }
+
+        initFirebase();
+    </script>
+</body>
+</html>

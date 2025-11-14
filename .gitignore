@@ -1,0 +1,37 @@
+# Configuration files with secrets
+cms/config/dev-config.json
+cms/js/prod-config.js
+
+# Environment files
+.env
+.env.local
+.env.development
+.env.production
+
+# Node modules
+node_modules/
+
+# Build outputs
+dist/
+build/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# VS Code
+.vscode/settings.json
+.vscode/launch.json
+
+# Temporary files
+*.tmp
+*.temp

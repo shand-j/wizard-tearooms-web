@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Wizard Tearoom - Country Tearoom</title>
+    <meta name="description" content="Welcome to The Wizard tearoom - a charming country tearoom experience">
+    <link rel="icon" type="image/png" href="assets/images/common/tearoom-logo_150.png">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <div class="nav-container">
+                <div class="logo">
+                    <img src="assets/images/common/tearoom-logo_150.png" alt="The Wizard Tearoom Logo" class="logo-image">
+                    <h1>The Wizard Tearoom</h1>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about-us.html">About Us</a></li>
+                    <li><a href="menus.html">Menus</a></li>
+                    <li><a href="space-hire.html">Space Hire</a></li>
+                    <li><a href="careers.html">Careers</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+                <div class="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section id="home" class="hero">
+            <div class="hero-content">
+                <h2>Welcome</h2>
+                <p>A unique woodland destination for wholesome food alongside fresh cakes and bakes, all made in house by our wonderful team or sourced from local independents. Unwind under the trees after exploring The Edge, or take away with you on your walk.</p>
+                <div class="hero-buttons">
+                    <a href="about-us.html" class="cta-button primary">Discover Our Story</a>
+                    <a href="menus.html" class="cta-button secondary">View Our Menus</a>
+                </div>
+            </div>
+            <div class="hero-image-carousel">
+                <div class="carousel-container">
+                    <div class="carousel-slide active">
+                        <img src="assets/images/common/outdoor-cafe.jpg" alt="Our Outdoor Café" loading="lazy">
+                    </div>
+                    <div class="carousel-slide">
+                        <img src="assets/images/common/meadow.jpg" alt="Beautiful Meadow Views" loading="lazy">
+                    </div>
+                    <div class="carousel-slide">
+                        <img src="assets/images/common/ice-cream-window.jpeg" alt="Ice Cream Window" loading="lazy">
+                    </div>
+                    <div class="carousel-slide">
+                        <img src="assets/images/common/location.jpg" alt="Our Location" loading="lazy">
+                    </div>
+                    <div class="carousel-slide">
+                        <img src="assets/images/common/space-hire.jpg" alt="Space Hire" loading="lazy">
+                    </div>
+                </div>
+                <div class="carousel-controls">
+                    <button class="carousel-btn prev-btn" aria-label="Previous image">&lt;</button>
+                    <button class="carousel-btn next-btn" aria-label="Next image">&gt;</button>
+                </div>
+                <div class="carousel-dots">
+                    <span class="dot active" data-slide="0"></span>
+                    <span class="dot" data-slide="1"></span>
+                    <span class="dot" data-slide="2"></span>
+                    <span class="dot" data-slide="3"></span>
+                    <span class="dot" data-slide="4"></span>
+                </div>
+            </div>
+        </section>
+
+        <section class="instagram-feed">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Follow Our Journey</h2>
+                    <p>See the latest from @thewizardtearoom</p>
+                </div>
+                <div class="instagram-grid" id="instagram-grid">
+                    <!-- Posts will be dynamically loaded here -->
+                </div>
+                <div class="instagram-footer">
+                    <a href="https://instagram.com/thewizardtearoom" class="instagram-link" target="_blank">
+                        <span>View on Instagram</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 The Wizard Tearoom. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script>
+        // Configure PDF.js worker
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    </script>
+    <script src="js/script.js"></script>
+    <script type="module" src="js/content-manager.js"></script>
+</body>
+</html>

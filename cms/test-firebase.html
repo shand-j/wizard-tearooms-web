@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebase Connection Test</title>
+</head>
+<body>
+    <h1>Firebase Connection Test</h1>
+    <div id="status">Testing connection...</div>
+    <div id="details"></div>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js';
+        import { getAuth, connectAuthEmulator } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js';
+        import { getFirestore, connectFirestoreEmulator } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js';
+
+        async function testFirebase() {
+            const statusDiv = document.getElementById('status');
+            const detailsDiv = document.getElementById('details');
+            
+            try {
+                // Load config
+                const response = await fetch('./config/dev-config.json');
+                if (!response.ok) {
+                    throw new Error(`Config load failed: ${response.status}`);
+                }
+                const config = await response.json();
+                
+                detailsDiv.innerHTML += `<p>✅ Config loaded</p>`;
+                detailsDiv.innerHTML += `<p>Project ID: ${config.firebase.projectId}</p>`;
+                detailsDiv.innerHTML += `<p>Auth Domain: ${config.firebase.authDomain}</p>`;
+                
+                // Initialize Firebase
+                const app = initializeApp(config.firebase);
+                detailsDiv.innerHTML += `<p>✅ Firebase app initialized</p>`;
+                
+                // Test Auth
+                const auth = getAuth(app);
+                detailsDiv.innerHTML += `<p>✅ Auth service connected</p>`;
+                
+                // Test Firestore
+                const db = getFirestore(app);
+                detailsDiv.innerHTML += `<p>✅ Firestore connected</p>`;
+                
+                statusDiv.innerHTML = '<strong style="color: green;">✅ Firebase connection successful!</strong>';
+                
+            } catch (error) {
+                statusDiv.innerHTML = '<strong style="color: red;">❌ Firebase connection failed</strong>';
+                detailsDiv.innerHTML += `<p style="color: red;">Error: ${error.message}</p>`;
+                console.error('Firebase test error:', error);
+            }
+        }
+
+        testFirebase();
+    </script>
+</body>
+</html>

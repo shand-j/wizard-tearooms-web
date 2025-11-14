@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wizard Tearoom CMS</title>
+    <link rel="icon" type="image/png" href="/assets/images/common/tearoom-logo_150.png">
+    <link rel="stylesheet" href="/cms/css/cms-styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Authentication Screen -->
+    <div id="auth-container" class="auth-container">
+        <div class="auth-card">
+            <div class="wizard-logo">🧙‍♀️</div>
+            <h1>Wizard Tearoom CMS</h1>
+            <p class="auth-subtitle">Content Management System</p>
+            <form id="login-form">
+                <input type="email" id="email" placeholder="Email Address" required>
+                <input type="password" id="password" placeholder="Password" required>
+                <button type="submit" class="auth-btn">Login</button>
+            </form>
+            <div id="auth-error" class="error-message" style="display: none;"></div>
+            <div id="auth-loading" class="loading-message" style="display: none;">
+                <div class="spinner"></div>
+                Signing in...
+            </div>
+        </div>
+    </div>
+
+    <!-- CMS Dashboard -->
+    <div id="cms-container" class="cms-container" style="display: none;">
+        <header class="cms-header">
+            <div class="header-left">
+                <div class="wizard-logo">🧙‍♀️</div>
+                <h1>Content Management</h1>
+            </div>
+            <div class="header-right">
+                <span id="user-email" class="user-info"></span>
+                <button id="logout-btn" class="logout-btn">Logout</button>
+            </div>
+        </header>
+
+        <nav class="cms-nav">
+            <button class="nav-btn active" data-section="carousel">Carousel Images</button>
+            <button class="nav-btn" data-section="menus">Menus</button>
+            <button class="nav-btn" data-section="instagram">Instagram</button>
+            <button class="nav-btn" data-section="jobs">Job Vacancies</button>
+        </nav>
+
+        <main class="cms-content" id="cms-content">
+            <div id="message-container"></div>
+            <!-- Dynamic content sections loaded here -->
+        </main>
+    </div>
+
+    <!-- Production configuration (injected at build time) -->
+    <script src="/cms/config/prod-config.js" onerror="console.log('Production config not found - using development mode')"></script>
+    
+    <script type="module" src="/cms/js/cms.js"></script>
+</body>
+</html>
