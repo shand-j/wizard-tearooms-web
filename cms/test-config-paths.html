@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Config Path Test</title>
+</head>
+<body>
+    <h1>Config Path Test</h1>
+    <div id="results"></div>
+
+    <script>
+        async function testPaths() {
+            const resultsDiv = document.getElementById('results');
+            const paths = [
+                './config/dev-config.json',
+                'config/dev-config.json',
+                '/cms/config/dev-config.json',
+                '../cms/config/dev-config.json'
+            ];
+
+            for (const path of paths) {
+                try {
+                    resultsDiv.innerHTML += `<p>Testing: <code>${path}</code></p>`;
+                    const response = await fetch(path);
+                    if (response.ok) {
+                        const config = await response.json();
+                        resultsDiv.innerHTML += `<p style="color: green;">✅ Success: ${path}</p>`;
+                        resultsDiv.innerHTML += `<pre>${JSON.stringify(config, null, 2)}</pre>`;
+                        break;
+                    } else {
+                        resultsDiv.innerHTML += `<p style="color: red;">❌ Failed: ${path} (${response.status})</p>`;
+                    }
+                } catch (error) {
+                    resultsDiv.innerHTML += `<p style="color: red;">❌ Error: ${path} - ${error.message}</p>`;
+                }
+            }
+        }
+
+        testPaths();
+    </script>
+</body>
+</html>

@@ -1,0 +1,178 @@
+name: Update Site Content from CMS
+
+on:
+  repository_dispatch:
+    types: [content-update]
+  push:
+    branches: [ main ]
+    paths:
+      - 'data/**'
+      - 'assets/images/**'
+
+jobs:
+  update-content:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        
+    - name: Install dependencies
+      run: |
+        npm init -y
+        npm install --save-dev firebase firebase-admin
+        
+    - name: Inject production configuration
+      env:
+        FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
+        FIREBASE_AUTH_DOMAIN: ${{ secrets.FIREBASE_AUTH_DOMAIN }}
+        FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+        FIREBASE_STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
+        FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}
+        FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+        GITHUB_REPOSITORY_OWNER: ${{ github.repository_owner }}
+        GITHUB_REPOSITORY_NAME: ${{ github.event.repository.name }}
+      run: ./scripts/inject-config.sh
+        
+    - name: Create content update script
+      run: |
+        cat > update-content.js << 'EOF'
+        const admin = require('firebase-admin');
+        const fs = require('fs').promises;
+        const path = require('path');
+
+        // Initialize Firebase Admin
+        const serviceAccount = {
+          type: "service_account",
+          project_id: process.env.FIREBASE_PROJECT_ID,
+          private_key_id: process.env.FIREBASE_PRIVATE_KEY_ID,
+          private_key: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+          client_email: process.env.FIREBASE_CLIENT_EMAIL,
+          client_id: process.env.FIREBASE_CLIENT_ID,
+          auth_uri: "https://accounts.google.com/o/oauth2/auth",
+          token_uri: "https://oauth2.googleapis.com/token",
+          auth_provider_x509_cert_url: "https://www.googleapis.com/oauth2/v1/certs",
+          client_x509_cert_url: `https://www.googleapis.com/robot/v1/metadata/x509/${process.env.FIREBASE_CLIENT_EMAIL}`
+        };
+
+        admin.initializeApp({
+          credential: admin.credential.cert(serviceAccount),
+          projectId: process.env.FIREBASE_PROJECT_ID
+        });
+
+        const db = admin.firestore();
+
+        async function updateSiteData() {
+          try {
+            console.log('🔄 Updating site data from CMS...');
+            
+            // Ensure data directory exists
+            await fs.mkdir('data', { recursive: true });
+            
+            // Get carousel images
+            const carouselSnapshot = await db.collection('carousel').orderBy('order', 'desc').get();
+            const carouselData = [];
+            carouselSnapshot.forEach(doc => {
+              const data = doc.data();
+              carouselData.push({
+                id: doc.id,
+                url: data.url,
+                filename: data.filename,
+                uploadDate: data.uploadDate.toDate().toISOString()
+              });
+            });
+            
+            // Get menus
+            const menusSnapshot = await db.collection('menus').get();
+            const menusData = {};
+            menusSnapshot.forEach(doc => {
+              const data = doc.data();
+              menusData[doc.id] = {
+                url: data.url,
+                filename: data.filename,
+                type: data.type,
+                fileType: data.fileType,
+                uploadDate: data.uploadDate.toDate().toISOString()
+              };
+            });
+            
+            // Get Instagram settings
+            let instagramData = null;
+            try {
+              const instagramDoc = await db.collection('settings').doc('instagram').get();
+              if (instagramDoc.exists) {
+                instagramData = instagramDoc.data();
+                // Remove sensitive data from public JSON
+                instagramData = {
+                  enabled: instagramData.enabled,
+                  userId: instagramData.userId,
+                  updatedDate: instagramData.updatedDate.toDate().toISOString()
+                };
+              }
+            } catch (e) {
+              console.log('No Instagram settings found');
+            }
+            
+            // Get jobs
+            const jobsSnapshot = await db.collection('jobs').where('active', '==', true).orderBy('postedDate', 'desc').get();
+            const jobsData = [];
+            jobsSnapshot.forEach(doc => {
+              const data = doc.data();
+              jobsData.push({
+                id: doc.id,
+                title: data.title,
+                description: data.description,
+                type: data.type,
+                salary: data.salary,
+                postedDate: data.postedDate.toDate().toISOString()
+              });
+            });
+            
+            // Write data files
+            await fs.writeFile('data/carousel.json', JSON.stringify(carouselData, null, 2));
+            await fs.writeFile('data/menus.json', JSON.stringify(menusData, null, 2));
+            await fs.writeFile('data/instagram.json', JSON.stringify(instagramData, null, 2));
+            await fs.writeFile('data/jobs.json', JSON.stringify(jobsData, null, 2));
+            
+            console.log(`✅ Updated site data:`);
+            console.log(`   📸 ${carouselData.length} carousel images`);
+            console.log(`   📋 ${Object.keys(menusData).length} menus`);
+            console.log(`   📱 Instagram: ${instagramData ? 'configured' : 'not configured'}`);
+            console.log(`   💼 ${jobsData.length} job postings`);
+            
+          } catch (error) {
+            console.error('❌ Error updating site data:', error);
+            process.exit(1);
+          }
+        }
+
+        updateSiteData();
+        EOF
+        
+    - name: Update site content
+      env:
+        FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+        FIREBASE_PRIVATE_KEY_ID: ${{ secrets.FIREBASE_PRIVATE_KEY_ID }}
+        FIREBASE_PRIVATE_KEY: ${{ secrets.FIREBASE_PRIVATE_KEY }}
+        FIREBASE_CLIENT_EMAIL: ${{ secrets.FIREBASE_CLIENT_EMAIL }}
+        FIREBASE_CLIENT_ID: ${{ secrets.FIREBASE_CLIENT_ID }}
+      run: node update-content.js
+      
+    - name: Commit and push changes
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add data/
+        if git diff --staged --quiet; then
+          echo "No changes to commit"
+        else
+          git commit -m "🤖 Auto-update site content from CMS [skip ci]"
+          git push
+        fi

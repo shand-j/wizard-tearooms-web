@@ -1,0 +1,20 @@
+[
+  {
+    "id": "sample-1",
+    "title": "Kitchen Assistant",
+    "type": "part-time",
+    "description": "We are looking for a friendly and hardworking Kitchen Assistant to join our team. You will help with food preparation, maintain cleanliness standards, and support our chefs in creating delicious meals for our customers.",
+    "salary": "£11.00 per hour",
+    "isActive": true,
+    "datePosted": "2025-11-14T10:00:00Z"
+  },
+  {
+    "id": "sample-2", 
+    "title": "Front of House Staff",
+    "type": "seasonal",
+    "description": "Join our front of house team for the busy season! You'll be taking orders, serving customers, and helping create a warm, welcoming atmosphere in our beautiful tearoom.",
+    "salary": "£10.50 per hour + tips",
+    "isActive": true,
+    "datePosted": "2025-11-10T14:30:00Z"
+  }
+]

@@ -1,0 +1,32 @@
+[
+  {
+    "id": "sample1",
+    "url": "assets/images/common/outdoor-cafe.jpg",
+    "filename": "outdoor-cafe.jpg",
+    "uploadDate": "2025-01-27T12:00:00Z"
+  },
+  {
+    "id": "sample2", 
+    "url": "assets/images/common/ice-cream-window.jpeg",
+    "filename": "ice-cream-window.jpeg",
+    "uploadDate": "2025-01-27T12:00:00Z"
+  },
+  {
+    "id": "sample3",
+    "url": "assets/images/common/location.jpg", 
+    "filename": "location.jpg",
+    "uploadDate": "2025-01-27T12:00:00Z"
+  },
+  {
+    "id": "sample4",
+    "url": "assets/images/common/space-hire.jpg",
+    "filename": "space-hire.jpg", 
+    "uploadDate": "2025-01-27T12:00:00Z"
+  },
+  {
+    "id": "sample5",
+    "url": "assets/images/common/meadow.jpg",
+    "filename": "meadow.jpg",
+    "uploadDate": "2025-01-27T12:00:00Z"
+  }
+]
